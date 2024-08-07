@@ -30,7 +30,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('package_type');
             $table->decimal('discount_value', 8, 2);
             $table->date('date');
-            $table->string('holded')->default('no');
+            $table->string('hold')->default('0');
             $table->decimal('rate', 8, 2)->nullable();
             $table->text('comments')->nullable();
             $table->timestamps();

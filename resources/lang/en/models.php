@@ -44,6 +44,7 @@ return [
 
 
     // ===================================================== //
+    
     'welcome'              => 'Welcome',
     'admin'                => 'Admin',
     'actions'              => 'Actions',

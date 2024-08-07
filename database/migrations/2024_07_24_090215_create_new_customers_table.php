@@ -30,7 +30,7 @@ class CreateNewCustomersTable extends Migration
             $table->string('request_status');
             $table->integer('registration_duration');
             $table->string('coupon_number');
-            $table->boolean('hold')->default(false);
+            $table->boolean('hold')->default(0);
             $table->timestamps();
         });
     }

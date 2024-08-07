@@ -42,6 +42,7 @@ class OrganizationController extends Controller
             'date' => 'required|date',           
             'rate' => 'required|string|max:255',
             'comments' => 'nullable|string',
+            'hold' => 'nullable|boolean', // Ensure hold is treated as a boolean
         ],$messages);
         
         if ($request->hasFile('add_image')) {
@@ -50,7 +51,7 @@ class OrganizationController extends Controller
         
         // Hash the password before saving
         $data['password'] = Hash::make($data['password']);
-        $data['holded'] = $request->has('holded') ? 'yes' : 'no';
+       
         
         Organization::create($data);
 

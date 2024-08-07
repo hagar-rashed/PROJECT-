@@ -41,8 +41,7 @@
                                         @csrf
                                         <div class="row">
                                             <!-- Name Input -->
-                                                    <!-- Name Input -->
-                                                    <div class="col-6">
+                                            <div class="col-6">
                                                 <div class="form-group">
                                                     <label for="name">{{ __('models.name') }}</label>
                                                     <input type="text" id="name" class="form-control" name="name"
@@ -70,7 +69,7 @@
                                             </div>
 
                                             <!-- Governorate Input -->
-                                            <div class="col-6">
+                                            <!-- <div class="col-6">
                                                 <div class="form-group">
                                                     <label for="government">{{ __('models.government') }}</label>
                                                     <input type="text" id="government" class="form-control" name="government"
@@ -81,8 +80,23 @@
                                                         </span>
                                                     @enderror
                                                 </div>
+                                            </div> -->
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label for="government" class="form-label">{{ __('models.government') }}</label>
+                                                    <select id="government" name="government" class="form-control">
+                                                        <option value="">{{ __('models.select_government') }}</option>
+                                                         @foreach($governments as $government)
+                                                         <option value="{{ $government->name }}" {{ old('government') == $government->name ? 'selected' : '' }}>{{ $government->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('government')
+                                                        <span class="alert alert-danger">
+                                                            <small class="errorTxt">{{ $message }}</small>
+                                                        </span>
+                                                    @enderror
+                                                </div>
                                             </div>
-
  
 
                                             <!-- National ID Input -->
@@ -127,8 +141,6 @@
                                                 </div>
                                             </div>
 
-                    
-
                                             <!-- Assigned Delivery Name Input -->
                                             <div class="col-6">
                                                 <div class="form-group">
@@ -171,7 +183,6 @@
                                                 </div>
                                             </div>
 
-
                                             <!-- Registration Date Input -->
                                             <div class="col-6">
                                                 <div class="form-group">
@@ -200,7 +211,6 @@
                                                 </div>
                                             </div>
 
-                            
                                             <!-- Registration End Date Input -->
                                             <div class="col-6">
                                                 <div class="form-group">
@@ -214,6 +224,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
+
                                             <!-- Request Status Input -->
                                             <div class="col-6">
                                                 <div class="form-group">
@@ -227,6 +238,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
+
                                             <!-- Registration Duration Input -->
                                             <div class="col-6">
                                                 <div class="form-group">
@@ -239,25 +251,46 @@
                                                         </span>
                                                     @enderror
                                                 </div>
-                                            </div>                        
+                                            </div>
 
-
-                                            <!-- Hold Checkbox -->
-                                            <div class="col-12">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="hold" name="hold">
-                                                    <label class="form-check-label" for="hold">
-                                                        {{ __('models.hold') }}
-                                                    </label>
+                                            <!-- Coupon Number Input -->
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label for="coupon_number">{{ __('models.coupon_number') }}</label>
+                                                    <input type="text" id="coupon_number" class="form-control" name="coupon_number"
+                                                        value="{{ old('coupon_number') }}" />
+                                                    @error('coupon_number')
+                                                        <span class="alert alert-danger">
+                                                            <small class="errorTxt">{{ $message }}</small>
+                                                        </span>
+                                                    @enderror
                                                 </div>
                                             </div>
+
+                                            <!-- Hold Checkbox -->
+                                           
+                                        <div class="col-6">
+                                           <div class="form-group">
+                                                <label for="hold">{{ __('models.hold') }}</label>
+                                                <input type="hidden" name="hold" value="0"> <!-- Default value when unchecked -->
+                                                <input type="checkbox" id="hold" class="form-check-input" name="hold" value="1" {{ old('hold') == '1' ? 'checked' : '' }} />
+                                                @error('hold')
+                                                <span class="alert alert-danger">
+                                                   <small class="errorTxt">{{ $message }}</small>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
 
                                             <!-- Submit Button -->
                                             <div class="col-12">
                                                 <button type="submit"
                                                     class="btn btn-primary mr-1">{{ __('models.save') }}</button>
+                                                <button type="reset" class="btn btn-outline-secondary">
+                                                    {{ __('models.cancel') }}
+                                                </button>
                                             </div>
-
                                         </div>
                                     </form>
                                 </div>
@@ -270,9 +303,12 @@
         </div>
     </div>
     <!-- END: Content-->
-
     @push('js')
         <script src="{{ asset('dashboard/assets/js/custom/validation/clientForm.js') }}"></script>
         <script src="{{ asset('dashboard/app-assets/js/custom/preview-image.js') }}"></script>
     @endpush
 @endsection
+
+
+  
+

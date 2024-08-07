@@ -250,13 +250,27 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                            <div class="col-6">
+
+                                            <!-- <div class="col-6">
                                              <div class="form-group">
                                                <label class="form-label" for="holded">{{ __('models.holded') }}</label>
                                                <input type="hidden" name="holded" value="no">
                                                <input type="checkbox" name="holded" value="yes" {{ old('holded', 'no') === 'yes' ? 'checked' : '' }} class="form-control">
                                              </div>
-                                           </div>   
+                                           </div>    -->
+                                           <div class="col-6">
+                                           <div class="form-group">
+                                                <label for="hold">{{ __('models.hold') }}</label>
+                                                <input type="hidden" name="hold" value="0"> <!-- Default value when unchecked -->
+                                                <input type="checkbox" id="hold" class="form-check-input" name="hold" value="1" {{ old('hold') == '1' ? 'checked' : '' }} />
+                                                @error('hold')
+                                                <span class="alert alert-danger">
+                                                   <small class="errorTxt">{{ $message }}</small>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
 
                                          <div class="col-12">
                                             <button type="submit" class="btn btn-primary me-1">{{ __('models.add') }}</button>
