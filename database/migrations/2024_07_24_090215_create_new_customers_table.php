@@ -17,8 +17,8 @@ class CreateNewCustomersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('address');
-            $table->string('government');
-            $table->string('national_id');
+            $table->string('governorate');
+            $table->string('national_id')->unique();
             $table->string('password');
             $table->string('user_name');
             $table->string('delivery_name');
@@ -29,7 +29,7 @@ class CreateNewCustomersTable extends Migration
             $table->date('registration_end');
             $table->string('request_status');
             $table->integer('registration_duration');
-            $table->string('coupon_number');
+            $table->string('coupon_number')->unique();
             $table->boolean('hold')->default(0);
             $table->timestamps();
         });

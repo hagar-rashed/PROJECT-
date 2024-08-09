@@ -74,10 +74,10 @@
                                             <!-- Governorate Input -->
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label for="government">{{ __('models.government') }}</label>
-                                                    <input type="text" id="government" class="form-control" name="government"
-                                                        value="{{ old('government', $customer->government) }}" />
-                                                    @error('government')
+                                                    <label for="governorate">{{ __('models.governorate') }}</label>
+                                                    <input type="text" id="governorate" class="form-control" name="governorate"
+                                                        value="{{ old('governorate', $customer->governorate) }}" />
+                                                    @error('governorate')
                                                         <span class="alert alert-danger">
                                                             <small class="errorTxt">{{ $message }}</small>
                                                         </span>
@@ -216,9 +216,10 @@
                                                 <div class="form-group">
                                                     <label for="request_status">{{ __('models.request_status') }}</label>
                                                     <select class="form-control" id="request_status" name="request_status">
+                                                    <option value="active" {{ old('request_status', $customer->request_status) == 'active' ? 'selected' : '' }}>{{ __('models.active') }}</option>
                                                         <option value="pending" {{ old('request_status', $customer->request_status) == 'pending' ? 'selected' : '' }}>{{ __('models.pending') }}</option>
-                                                        <option value="approved" {{ old('request_status', $customer->request_status) == 'approved' ? 'selected' : '' }}>{{ __('models.approved') }}</option>
-                                                        <option value="rejected" {{ old('request_status', $customer->request_status) == 'rejected' ? 'selected' : '' }}>{{ __('models.rejected') }}</option>
+                                                        <option value="new" {{ old('request_status', $customer->request_status) == 'new' ? 'selected' : '' }}>{{ __('models.new') }}</option>
+                                                        <option value="cancel" {{ old('request_status', $customer->request_status) == 'cancel' ? 'selected' : '' }}>{{ __('models.cancel') }}</option>
                                                     </select>
                                                     @error('request_status')
                                                         <span class="alert alert-danger">

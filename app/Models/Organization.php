@@ -12,7 +12,7 @@ class Organization extends Model
     protected $fillable = [
         'organization_name',
         'user_name',
-        'government',
+        'governorate',
         'organization_address',
         'city',
         'add_image',
@@ -30,7 +30,5 @@ class Organization extends Model
         'comments',
     ];
 
-    protected $casts = [
-        'date' => 'date', // Ensure date is cast to a Carbon instance
-    ];
+    
 }

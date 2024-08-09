@@ -12,7 +12,7 @@ class NewCustomer extends Model
     protected $fillable = [
         'name',
         'address',
-        'government',
+        'governorate',
         'national_id',
         'password',
         'user_name',

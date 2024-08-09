@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Government;
+use App\Models\Governorate;
 
-class GovernmentSeeder extends Seeder
+class GovernorateSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,14 +14,14 @@ class GovernmentSeeder extends Seeder
      */
     public function run()
     {
-        $governments = [
+        $governorates = [
             'القاهرة', 'الإسكندرية', 'الجيزة', 'القليوبية', 'بورسعيد', 'السويس', 'الأقصر', 'أسوان', 'أسيوط',
             'البحيرة', 'بني سويف', 'الدقهلية', 'دمياط', 'الفيوم', 'الغربية', 'الإسماعيلية', 'كفر الشيخ',
             'مطروح', 'المنيا', 'المنوفية', 'الوادي الجديد', 'شمال سيناء', 'قنا', 'البحر الأحمر', 'الشرقية', 'سوهاج', 'جنوب سيناء'
         ];
 
-        foreach ($governments as $government) {
-            Government::create(['name' => $government]);
+        foreach ($governorates as $governorate) {
+            Governorate::create(['name' => $governorate]);
         }
     }
 }

@@ -17,7 +17,7 @@ class CreateOrganizationsTable extends Migration
             $table->id();
             $table->string('organization_name');
             $table->string('user_name');
-            $table->string('government');
+            $table->string('governorate');
             $table->string('organization_address');
             $table->string('city');
             $table->string('add_image')->nullable();
@@ -30,7 +30,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('package_type');
             $table->decimal('discount_value', 8, 2);
             $table->date('date');
-            $table->string('hold')->default('0');
+            $table->boolean('hold')->default(0);
             $table->decimal('rate', 8, 2)->nullable();
             $table->text('comments')->nullable();
             $table->timestamps();

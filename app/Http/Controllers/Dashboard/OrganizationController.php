@@ -8,18 +8,52 @@ use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Governorate;
+
 
 class OrganizationController extends Controller
 {
-    public function index()
+    
+    public function index(Request $request)
     {
-        $organizations = Organization::all();
+        $query = Organization::query();
+    
+        // Filter by date range
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $fromDate = $request->input('from_date');
+            $toDate = $request->input('to_date');
+            $query->whereBetween('date', [$fromDate, $toDate]);
+        }
+    
+        // Filter by user_name
+        if ($request->filled('user_name')) {
+            $userName = $request->input('user_name');
+            $query->where('user_name', 'like', "%$userName%");
+        }
+    
+        // Filter by organization_name
+        if ($request->filled('organization_name')) {
+            $organizationName = $request->input('organization_name');
+            $query->where('organization_name', 'like', "%$organizationName%");
+        }
+    
+        // Filter by organization_owner
+        if ($request->filled('organization_owner')) {
+            $organizationOwner = $request->input('organization_owner');
+            $query->where('organization_owner', 'like', "%$organizationOwner%");
+        }
+    
+        $organizations = $query->get();
+    
         return view('dashboard.organizations.index', compact('organizations'));
     }
 
+
     public function create()
     {
-        return view('dashboard.organizations.create');
+        $governorates = Governorate::all();
+        return view('dashboard.organizations.create', compact('governorates'));
+       
     }
 
     public function store(Request $request)
@@ -28,13 +62,13 @@ class OrganizationController extends Controller
         $data = $request->validate([
             'organization_name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255',
-            'government' => 'required|string|max:255',
+            'governorate' => 'required|string|max:255',
             'organization_address' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'organization_owner' => 'required|string|max:255',
             'organization_type' => 'required|string|max:255',
             'password' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
+            'phone' => 'required|digits:11|regex:/^([0-9\s\-\+\(\)]*)$/',
             'discount_type' => 'required|string|max:255',
             'package_value' => 'required|numeric',
             'package_type' => 'required|string|max:255',
@@ -42,7 +76,7 @@ class OrganizationController extends Controller
             'date' => 'required|date',           
             'rate' => 'required|string|max:255',
             'comments' => 'nullable|string',
-            'hold' => 'nullable|boolean', // Ensure hold is treated as a boolean
+            'hold' => 'nullable|boolean', 
         ],$messages);
         
         if ($request->hasFile('add_image')) {
@@ -84,13 +118,13 @@ class OrganizationController extends Controller
         $data = $request->validate([
             'organization_name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255',
-            'government' => 'required|string|max:255',
+            'governorate' => 'required|string|max:255',
             'organization_address' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'organization_owner' => 'required|string|max:255',
             'organization_type' => 'required|string|max:255',
             'password' => 'nullable|string|max:255',
-            'phone' => 'required|string|max:255',
+            'phone' => 'required|digits:11|regex:/^([0-9\s\-\+\(\)]*)$/',
             'discount_type' => 'required|string|max:255',
             'package_value' => 'required|numeric',
             'package_type' => 'required|string|max:255',
@@ -98,7 +132,8 @@ class OrganizationController extends Controller
             'date' => 'required|date',           
             'rate' => 'required|string|max:255',
             'comments' => 'nullable|string',
-        ]);
+            'hold' => 'nullable|boolean',
+        ],$messages);
     
     
        // $data = $request->all();
@@ -113,7 +148,7 @@ class OrganizationController extends Controller
             unset($data['password']);
         }
         
-        $data['holded'] = $request->has('holded') ? 'yes' : 'no';
+        //$data['holded'] = $request->has('holded') ? 'yes' : 'no';
     
         $organization->update($data);
     
@@ -138,63 +173,61 @@ class OrganizationController extends Controller
 
     public function messages(){
         return [            
-            'organization_name.required' => 'Organization name is required.',
-            'organization_name.string' => 'Organization name must be a string.',
-            'organization_name.max' => 'Organization name cannot exceed 255 characters.',
+            'organization_name.required' => 'اسم المنشاة مطلوب.',
+            'organization_name.string' => 'يجب أن يكون اسم المنشاة نصاً.',
+            'organization_name.max' => 'لا يمكن أن يتجاوز اسم المنشاة 255 حرفًا.',
             
-            'user_name.required' => 'User name is required.',
-            'user_name.string' => 'User name must be a string.',
-            'user_name.max' => 'User name cannot exceed 255 characters.',
+            'user_name.required' => 'اسم المستخدم مطلوب.',
+            'user_name.string' => 'يجب أن يكون اسم المستخدم نصاً.',
+            'user_name.max' => 'لا يمكن أن يتجاوز اسم المستخدم 255 حرفًا.',
             
-            'government.required' => 'Government is required.',
-            'government.string' => 'Government must be a string.',
-            'government.max' => 'Government cannot exceed 255 characters.',
+           'governorate.required' => 'المحافظة مطلوبة.',
+           'governorate.string' => 'يجب أن تكون المحافظة نصاً.',
+           'governorate.max' => 'لا يمكن أن تتجاوز المحافظة 255 حرفًا.',
             
-            'organization_address.required' => 'Organization address is required.',
-            'organization_address.string' => 'Organization address must be a string.',
-            'organization_address.max' => 'Organization address cannot exceed 255 characters.',
+            'organization_address.required' => 'عنوان المنشاة مطلوب.',
+            'organization_address.string' => 'يجب أن يكون عنوان المنشاة نصاً.',
+            'organization_address.max' => 'لا يمكن أن يتجاوز عنوان المنشاة 255 حرفًا.',
             
-            'city.required' => 'City is required.',
-            'city.string' => 'City must be a string.',
-            'city.max' => 'City cannot exceed 255 characters.',
+            'city.required' => 'المدينة مطلوبة.',
+            'city.string' => 'يجب أن تكون المدينة نصاً.',
+            'city.max' => 'لا يمكن أن تتجاوز المدينة 255 حرفًا.',
             
-            'add_image.image' => 'The file must be an image.',
-            'add_image.mimes' => 'The image must be a file of type: jpg, jpeg, png.',
-            'add_image.max' => 'The image cannot be larger than 2048 kilobytes.',
+            'add_image.image' => 'يجب أن يكون الملف صورة.',
+            'add_image.mimes' => 'يجب أن تكون الصورة من نوع: jpg، jpeg، png.',
+            'add_image.max' => 'لا يمكن أن تكون الصورة أكبر من 2048 كيلوبايت.',
             
-            'organization_owner.required' => 'Organization owner is required.',
-            'organization_owner.string' => 'Organization owner must be a string.',
-            'organization_owner.max' => 'Organization owner cannot exceed 255 characters.',
+            'organization_owner.required' => 'مالك المنشاة مطلوب.',
+            'organization_owner.string' => 'يجب أن يكون مالك المنشاة نصاً.',
+            'organization_owner.max' => 'لا يمكن أن يتجاوز مالك المنشاة 255 حرفًا.',
             
-            'organization_type.required' => 'Organization type is required.',
-            'organization_type.string' => 'Organization type must be a string.',
-            'organization_type.max' => 'Organization type cannot exceed 255 characters.',
+            'organization_type.required' => 'نوع المنشاة مطلوب.',
+            'organization_type.string' => 'يجب أن يكون نوع المنشاة نصاً.',
+            'organization_type.max' => 'لا يمكن أن يتجاوز نوع المنشاة 255 حرفًا.',
             
-            'password.required' => 'Password is required.',
-            'password.string' => 'Password must be a string.',
-            'password.min' => 'Password must be at least 6 characters long.',
+            'password.required' => 'كلمة المرور مطلوبة.',
+            'password.string' => 'يجب أن تكون كلمة المرور نصاً.',
+            'password.min' => 'يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل.',            
             
-            'phone.required' => 'Phone number is required.',
-            'phone.string' => 'Phone number must be a string.',
-            'phone.max' => 'Phone number cannot exceed 15 characters.',
+            'phone.required' => 'رقم الهاتف مطلوب.',
+            'phone.digits' => 'يجب أن يحتوي رقم الهاتف على 11 رقماً بالضبط.',
             
-            'discount_type.required' => 'Discount type is required.',
-            'discount_type.string' => 'Discount type must be a string.',
-            'discount_type.max' => 'Discount type cannot exceed 255 characters.',
+            'discount_type.required' => 'نوع الخصم مطلوب.',
+            'discount_type.string' => 'يجب أن يكون نوع الخصم نصاً.',
+            'discount_type.max' => 'لا يمكن أن يتجاوز نوع الخصم 255 حرفًا.',
             
-            'package_value.required' => 'Package value is required.',
-            'package_value.numeric' => 'Package value must be a number.',
+            'package_value.required' => 'قيمة الباقة مطلوبة.',
+            'package_value.numeric' => 'يجب أن تكون قيمة الباقة رقماً.',
             
-            'package_type.required' => 'Package type is required.',
-            'package_type.string' => 'Package type must be a string.',
-            'package_type.max' => 'Package type cannot exceed 255 characters.',
+            'package_type.required' => 'نوع الباقة مطلوب.',
+            'package_type.string' => 'يجب أن يكون نوع الباقة نصاً.',
+            'package_type.max' => 'لا يمكن أن يتجاوز نوع الباقة 255 حرفًا.',
             
-            'discount_value.required' => 'Discount value is required.',
-            'discount_value.numeric' => 'Discount value must be a number.',
+            'discount_value.required' => 'قيمة الخصم مطلوبة.',
+            'discount_value.numeric' => 'يجب أن تكون قيمة الخصم رقماً.',
             
-            'date.required' => 'Date is required.',
-            'date.date' => 'Date must be a valid date.',
-            
+            'date.required' => 'التاريخ مطلوب.',
+            'date.date' => 'يجب أن يكون التاريخ تاريخاً صحيحاً.',
         ];
             
     }

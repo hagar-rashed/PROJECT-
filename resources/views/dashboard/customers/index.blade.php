@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- BEGIN: Content-->
-    <div class="app-content content ">
+    <div class="app-content content">
         <div class="content-overlay"></div>
         <div class="header-navbar-shadow"></div>
         <div class="content-wrapper">
@@ -36,6 +36,34 @@
                 </div>
             </div>
             <div class="content-body">
+                <!-- Search filter form -->
+                <form action="{{ route('admin.newCustomers.index') }}" method="GET">
+                    <div class="row align-items-end">
+                        <div class="col-md-2">
+                            <label for="from_date">{{ __('models.from') }}</label>
+                            <input type="date" id="from_date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="to_date">{{ __('models.to') }}</label>
+                            <input type="date" id="to_date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="delivery_name">{{ __('models.delivery_name') }}</label>
+                            <input type="text" id="delivery_name" name="delivery_name" class="form-control" value="{{ request('delivery_name') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="name">{{ __('models.name') }}</label>
+                            <input type="text" id="name" name="name" class="form-control" value="{{ request('name') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="user_name">{{ __('models.user_name') }}</label>
+                            <input type="text" id="user_name" name="user_name" class="form-control" value="{{ request('user_name') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">{{ __('models.search') }}</button>
+                        </div>
+                    </div>
+                </form>
                 <!-- Basic table -->
                 <section id="basic-datatable">
                     <div class="row">
@@ -49,11 +77,11 @@
                                             <th>{{ __('models.delivery_name') }}</th>
                                             <th>{{ __('models.amount_paid') }}</th>                                                                                      
                                             <th>{{ __('models.request_status') }}</th>
+                                            <th>{{ __('models.registration_date') }}</th>
                                             <th>{{ __('models.registration_duration') }}</th>
                                             <th>{{ __('models.coupon_number') }}</th>
                                             <th>{{ __('models.hold') }}</th>
                                             <th>{{ __('models.actions') }}</th>                          
-                                        
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -64,10 +92,10 @@
                                                 <td>{{ $customer->delivery_name }}</td>
                                                 <td>{{ $customer->amount_paid }}</td>                                                
                                                 <td>{{ $customer->request_status }}</td>
+                                                <td>{{ $customer->registration_date }}</td>
                                                 <td>{{ $customer->registration_duration }}</td>
                                                 <td>{{ $customer->coupon_number }}</td>
                                                 <td>{{ $customer->hold ? __('models.yes') : __('models.no') }}</td>                                          
-                                           
                                                 <td class="text-center">
                                                     <div class="btn-group" role="group" aria-label="Second group">
                                                         <a href="{{ route('admin.newCustomers.edit', $customer->id) }}" class="btn btn-sm btn-primary">

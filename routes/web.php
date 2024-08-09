@@ -66,6 +66,11 @@ Route::middleware('localization')->group(function () {
         Route::delete('delete-newcustomer/{id}', 'NewCustomerController@destroy')->name('clients.delete');
         Route::resource('organizations', OrganizationController::class);
         Route::delete('delete-organization/{id}', 'OrganizationController@destroy')->name('organizations.delete');
+        //inventory
+       
+
+
+
         Route::resource('brands', 'BrandController');
         Route::resource('reviews', 'ReviewController');
         Route::resource('partners', 'PartnerController');

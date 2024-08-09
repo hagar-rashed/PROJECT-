@@ -68,29 +68,17 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Governorate Input -->
-                                            <!-- <div class="col-6">
-                                                <div class="form-group">
-                                                    <label for="government">{{ __('models.government') }}</label>
-                                                    <input type="text" id="government" class="form-control" name="government"
-                                                        value="{{ old('government') }}" />
-                                                    @error('government')
-                                                        <span class="alert alert-danger">
-                                                            <small class="errorTxt">{{ $message }}</small>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div> -->
+                                           
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label for="government" class="form-label">{{ __('models.government') }}</label>
-                                                    <select id="government" name="government" class="form-control">
-                                                        <option value="">{{ __('models.select_government') }}</option>
-                                                         @foreach($governments as $government)
-                                                         <option value="{{ $government->name }}" {{ old('government') == $government->name ? 'selected' : '' }}>{{ $government->name }}</option>
+                                                    <label for="governorate" class="form-label">{{ __('models.governorate') }}</label>
+                                                    <select id="governorate" name="governorate" class="form-control">
+                                                        <option value="">{{ __('models.select_governorate') }}</option>
+                                                         @foreach($governorates as $governorate)
+                                                         <option value="{{ $governorate->name }}" {{ old('governorate') == $governorate->name ? 'selected' : '' }}>{{ $governorate->name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @error('government')
+                                                    @error('governorate')
                                                         <span class="alert alert-danger">
                                                             <small class="errorTxt">{{ $message }}</small>
                                                         </span>
@@ -227,15 +215,19 @@
 
                                             <!-- Request Status Input -->
                                             <div class="col-6">
-                                                <div class="form-group">
+                                               <div class="form-group">
                                                     <label for="request_status">{{ __('models.request_status') }}</label>
-                                                    <input type="text" id="request_status" class="form-control" name="request_status"
-                                                        value="{{ old('request_status') }}" />
-                                                    @error('request_status')
-                                                        <span class="alert alert-danger">
-                                                            <small class="errorTxt">{{ $message }}</small>
-                                                        </span>
-                                                    @enderror
+                                                    <select id="request_status" class="form-control" name="request_status">
+                                                        <option value="active" {{ old('request_status') == 'active' ? 'selected' : '' }}>{{ __('models.active') }}</option>
+                                                        <option value="pending" {{ old('request_status') == 'pending' ? 'selected' : '' }}>{{ __('models.pending') }}</option>
+                                                        <option value="new" {{ old('request_status') == 'new' ? 'selected' : '' }}>{{ __('models.new') }}</option>
+                                                        <option value="cancel" {{ old('request_status') == 'cancel' ? 'selected' : '' }}>{{ __('models.cancel') }}</option>
+                                                    </select>
+                                                  @error('request_status')
+                                                 <span class="alert alert-danger">
+                                                    <small class="errorTxt">{{ $message }}</small>
+                                                 </span>
+                                                  @enderror
                                                 </div>
                                             </div>
 
@@ -270,10 +262,10 @@
                                             <!-- Hold Checkbox -->
                                            
                                         <div class="col-6">
-                                           <div class="form-group">
-                                                <label for="hold">{{ __('models.hold') }}</label>
+                                           <div class="form-group">                                               
                                                 <input type="hidden" name="hold" value="0"> <!-- Default value when unchecked -->
                                                 <input type="checkbox" id="hold" class="form-check-input" name="hold" value="1" {{ old('hold') == '1' ? 'checked' : '' }} />
+                                                <label for="hold">{{ __('models.hold') }}</label>
                                                 @error('hold')
                                                 <span class="alert alert-danger">
                                                    <small class="errorTxt">{{ $message }}</small>

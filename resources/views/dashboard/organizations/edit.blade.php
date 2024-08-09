@@ -67,10 +67,10 @@
 
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label for="government">{{ __('models.government') }}</label>
-                                                    <input type="text" id="government" class="form-control" name="government"
-                                                        value="{{ old('government', $organization->government) }}" />
-                                                    @error('government')
+                                                    <label for="governorate">{{ __('models.governorate') }}</label>
+                                                    <input type="text" id="governorate" class="form-control" name="governorate"
+                                                        value="{{ old('governorate', $organization->governorate) }}" />
+                                                    @error('governorate')
                                                         <span class="alert alert-danger">
                                                             <small class="errorTxt">{{ $message }}</small>
                                                         </span>
@@ -162,16 +162,19 @@
 
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label for="discount_type">{{ __('models.discount_type') }}</label>
-                                                    <input type="text" id="discount_type" class="form-control" name="discount_type"
-                                                        value="{{ old('discount_type', $organization->discount_type) }}" />
-                                                    @error('discount_type')
-                                                        <span class="alert alert-danger">
-                                                            <small class="errorTxt">{{ $message }}</small>
-                                                        </span>
-                                                    @enderror
+                                                   <label for="discount_type">{{ __('models.discount_type') }}</label>
+                                                   <select id="discount_type" class="form-control" name="discount_type">
+                                                        <option value="" disabled>{{ __('Select Discount Type') }}</option>
+                                                        <option value="cash" {{ old('discount_type', $organization->discount_type) == 'cash' ? 'selected' : '' }}>Cash</option>
+                                                        <option value="percent" {{ old('discount_type', $organization->discount_type) == 'percent' ? 'selected' : '' }}>Percent</option>
+                                                    </select>
+                                                 @error('discount_type')
+                                                  <span class="alert alert-danger">
+                                                    <small class="errorTxt">{{ $message }}</small>
+                                                  </span>
+                                                 @enderror
                                                 </div>
-                                            </div>
+                                            </div>                             
 
                                             <div class="col-6">
                                                 <div class="form-group">
@@ -211,36 +214,39 @@
                                                     @enderror
                                                 </div>
                                             </div>
+            
 
-                                            <!-- <div class="col-6">
-                                                <div class="form-group">
-                                                    <label for="date">{{ __('models.date') }}</label>
-                                                    <input type="date" id="date" class="form-control" name="date"
-                                                        value="{{ old('date', $organization->date ? $organization->date->format('Y-m-d') : '') }}" />
-                                                    @error('date')
-                                                        <span class="alert alert-danger">
-                                                            <small class="errorTxt">{{ $message }}</small>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div> -->
-
-                                            <!-- Eighth row of inputs -->
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label for="date" class="form-label">{{ __('models.date') }}</label>
-                                                    <input type="date" id="date" name="date" class="form-control" value="{{ old('date', optional($organization->date)->format('Y-m-d')) }}">
-                                                    @error('date')
-                                                        <span class="alert alert-danger">
-                                                            <small class="errorTxt">{{ $message }}</small>
-                                                        </span>
+                                                   <label for="rate" class="form-label">{{ __('models.rate') }}</label>
+                                                    <div class="star-rating">
+                                                        <input type="radio" id="star5" name="rate" value="5" {{ old('rate',$organization->rate) == 5 ? 'checked' : '' }}>
+                                                        <label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+
+                                                        <input type="radio" id="star4" name="rate" value="4" {{ old('rate',$organization->rate) == 4 ? 'checked' : '' }}>
+                                                        <label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+
+                                                        <input type="radio" id="star3" name="rate" value="3" {{ old('rate',$organization->rate) == 3 ? 'checked' : '' }}>
+                                                        <label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+
+                                                       <input type="radio" id="star2" name="rate" value="2" {{ old('rate',$organization->rate) == 2 ? 'checked' : '' }}>
+                                                       <label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+
+                                                       <input type="radio" id="star1" name="rate" value="1" {{ old('rate',$organization->rate) == 1 ? 'checked' : '' }}>
+                                                       <label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+                                                    </div>
+                                                    @error('rate')
+                                                    <span class="alert alert-danger">
+                                                       <small class="errorTxt">{{ $message }}</small>
+                                                    </span>
                                                     @enderror
                                                 </div>
                                             </div>
 
+
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label for="hold">{{ __('models.hold') }}</label>
+                                                   
                                                     <input type="checkbox" id="hold" class="form-check-input" name="hold"
                                                         {{ old('hold', $organization->hold) ? 'checked' : '' }} />
                                                     <label class="form-check-label" for="hold">{{ __('models.hold') }}</label>
@@ -252,18 +258,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-6">
-                                                <div class="form-group">
-                                                    <label for="rate">{{ __('models.rate') }}</label>
-                                                    <input type="text" id="rate" class="form-control" name="rate"
-                                                        value="{{ old('rate', $organization->rate) }}" />
-                                                    @error('rate')
-                                                        <span class="alert alert-danger">
-                                                            <small class="errorTxt">{{ $message }}</small>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
+                          
 
                                             <div class="col-6">
                                                 <div class="form-group">
@@ -293,6 +288,31 @@
         </div>
     </div>
     <!-- END: Content-->
+    <style>
+    .star-rating {
+        direction: rtl;
+        display: inline-flex;
+        justify-content: flex-start;
+    }
+    .star-rating input[type="radio"] {
+        display: none;
+    }
+    .star-rating label {
+        font-size: 24px;
+        color: #ddd;
+        cursor: pointer;
+        margin: 0 5px;
+    }
+    .star-rating input[type="radio"]:checked ~ label,
+    .star-rating input[type="radio"]:hover ~ label {
+        color: #ffc107;
+    }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: #ffc107;
+    }
+</style>
+
 
     @push('js')
         <script src="{{ asset('dashboard/assets/js/custom/validation/organizationForm.js') }}"></script>

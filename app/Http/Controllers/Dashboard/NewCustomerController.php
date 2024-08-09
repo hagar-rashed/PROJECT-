@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\NewCustomer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Models\Government;
+use App\Models\Governorate;
 
 
 class NewCustomerController extends Controller
@@ -20,14 +20,42 @@ class NewCustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    
+
+    public function index(Request $request)
     {
-        $customers = NewCustomer::get();
+        $query = NewCustomer::query();
+    
+     
+        // Filter by registration_date
+       if ($request->filled('from_date') && $request->filled('to_date')) {
+           $fromDate = $request->input('from_date');
+           $toDate = $request->input('to_date');
+           $query->whereBetween('registration_date', [$fromDate, $toDate]);
+        }
 
+        // Filter by delivery_name
+        if ($request->filled('delivery_name')) {
+            $deliveryName = $request->input('delivery_name');
+            $query->where('delivery_name', 'like', "%$deliveryName%");
+        }
+
+        // Filter by name
+       if ($request->filled('name')) {
+           $name = $request->input('name');
+           $query->where('name', 'like', "%$name%");
+        }
+
+        // Filter by user_name
+       if ($request->filled('user_name')) {
+           $userName = $request->input('user_name');
+           $query->where('user_name', 'like', "%$userName%");
+        }
+    
+        $customers = $query->get();
+    
         return view('dashboard.customers.index', compact('customers'));
-       
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -35,8 +63,8 @@ class NewCustomerController extends Controller
      */
     public function create()    
     {
-        $governments = Government::all();
-        return view('dashboard.customers.create', compact('governments'));
+        $governorates = Governorate::all();
+        return view('dashboard.customers.create', compact('governorates'));
     }
     /**
      * Store a newly created resource in storage.
@@ -50,8 +78,8 @@ class NewCustomerController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'government' => 'required|string|max:255',
-            'national_id' => 'required|string|max:255',
+            'governorate' => 'required|string|max:255',
+            'national_id' => 'required|string|max:14|unique:new_customers,national_id',
             'password' => 'required|string|min:6',
             'user_name' => 'required|string|max:255',
             'delivery_name' => 'required|string|max:255',
@@ -62,20 +90,16 @@ class NewCustomerController extends Controller
             'registration_end' => 'required|date|after:registration_start',
             'request_status' => 'required|string|max:255',
             'registration_duration' => 'required|integer',
-            'coupon_number' => 'required|string|max:255',
-            'hold' => 'nullable|boolean', // Ensure hold is treated as a boolean
-        ]);
+            'coupon_number' => 'required|string|max:255|unique:new_customers,coupon_number',
+            'hold' => 'nullable|boolean', 
+        ],$messages);
     
 
         
      //   $data['type'] = 'client';
         $data['password'] = Hash::make($request->input('password')); // Hashing the password
 
-          // Generate a unique coupon number
-       // $data['coupon_number'] = $this->generateUniqueCouponNumber();
         
-
-       // $customer = $this->brandRepo->create($data);
         $customer = NewCustomer::create($data);
 
         if ($customer) {
@@ -85,16 +109,7 @@ class NewCustomerController extends Controller
         }
     }
 
-    // private function generateUniqueCouponNumber()
-    // {
-    //     do {
-    //         $couponNumber = Str::random(10); // Generates a random 10 character string
-    //     } while (NewCustomer::where('coupon_number', $couponNumber)->exists());
-
-    //     return $couponNumber;
-    // }
-
-    
+      
 
     /**
      * Display the specified resource.
@@ -168,48 +183,50 @@ class NewCustomerController extends Controller
 
     public function messages(){
         return [            
-            'name.required' => 'Name is required.',
-            'name.string' => 'Name must be a string.',
-            'name.max' => 'Name cannot exceed 255 characters.',
-            'address.required' => 'Address is required.',
-            'address.string' => 'Address must be a string.',
-            'address.max' => 'Address cannot exceed 255 characters.',
-            'government.required' => 'Government is required.',
-            'government.string' => 'Government must be a string.',
-            'government.max' => 'Government cannot exceed 255 characters.',
-            'national_id.required' => 'National ID is required.',
-            'national_id.string' => 'National ID must be a string.',
-            'national_id.max' => 'National ID cannot exceed 255 characters.',
-            'password.required' => 'Password is required.',
-            'password.string' => 'Password must be a string.',
-            'password.min' => 'Password must be at least 6 characters long.',
-            'user_name.required' => 'Username is required.',
-            'user_name.string' => 'Username must be a string.',
-            'user_name.max' => 'Username cannot exceed 255 characters.',
-            'delivery_name.required' => 'Delivery name is required.',
-            'delivery_name.string' => 'Delivery name must be a string.',
-            'delivery_name.max' => 'Delivery name cannot exceed 255 characters.',
-            'amount_paid.required' => 'Amount paid is required.',
-            'amount_paid.numeric' => 'Amount paid must be a number.',
-            'city.required' => 'City is required.',
-            'city.string' => 'City must be a string.',
-            'city.max' => 'City cannot exceed 255 characters.',
-            'registration_date.required' => 'Registration date is required.',
-            'registration_date.date' => 'Registration date must be a valid date.',
-            'registration_start.required' => 'Registration start date is required.',
-            'registration_start.date' => 'Registration start date must be a valid date.',
-            'registration_end.required' => 'Registration end date is required.',
-            'registration_end.date' => 'Registration end date must be a valid date.',
-            'registration_end.after' => 'Registration end date must be after the registration start date.',
-            'request_status.required' => 'Request status is required.',
-            'request_status.string' => 'Request status must be a string.',
-            'request_status.max' => 'Request status cannot exceed 255 characters.',
-            'registration_duration.required' => 'Registration duration is required.',
-            'registration_duration.integer' => 'Registration duration must be an integer.',
-            'coupon_number.required' => 'Coupon number is required.',
-            'coupon_number.string' => 'Coupon number must be a string.',
-            'coupon_number.max' => 'Coupon number cannot exceed 255 characters.',
-            
+            'name.required' => 'الاسم مطلوب.',
+            'name.string' => 'يجب أن يكون الاسم نصاً.',
+            'name.max' => 'لا يمكن أن يتجاوز الاسم 255 حرفًا.',
+            'address.required' => 'العنوان مطلوب.',
+            'address.string' => 'يجب أن يكون العنوان نصاً.',
+            'address.max' => 'لا يمكن أن يتجاوز العنوان 255 حرفًا.',
+            'governorate.required' => 'المحافطة مطلوبة.',
+            'governorate.string' => 'يجب أن تكون المحافطة نصاً.',
+            'governorate.max' => 'لا يمكن أن تتجاوز المحافطة 255 حرفًا.',
+            'national_id.required' => 'الرقم القومي مطلوب.',
+            'national_id.string' => 'يجب أن يكون الرقم القومي نصاً.',
+            'national_id.max' => 'لا يمكن أن يتجاوز الرقم القومي 14 حرفًا.',
+            'national_id.unique' => 'تم استخدام الرقم القومي من قبل. يرجى إدخال رقم قومي فريد.',
+            'password.required' => 'كلمة المرور مطلوبة.',
+            'password.string' => 'يجب أن تكون كلمة المرور نصاً.',
+            'password.min' => 'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.',
+            'user_name.required' => 'اسم المستخدم مطلوب.',
+            'user_name.string' => 'يجب أن يكون اسم المستخدم نصاً.',
+            'user_name.max' => 'لا يمكن أن يتجاوز اسم المستخدم 255 حرفًا.',
+            'delivery_name.required' => 'اسم المندوب مطلوب.',
+            'delivery_name.string' => 'يجب أن يكون اسم المندوب نصاً.',
+            'delivery_name.max' => 'لا يمكن أن يتجاوز اسم المندوب 255 حرفًا.',
+            'amount_paid.required' => 'المبلغ المدفوع مطلوب.',
+            'amount_paid.numeric' => 'يجب أن يكون المبلغ المدفوع رقمًا.',
+            'city.required' => 'المدينة مطلوبة.',
+            'city.string' => 'يجب أن تكون المدينة نصاً.',
+            'city.max' => 'لا يمكن أن تتجاوز المدينة 255 حرفًا.',
+            'registration_date.required' => 'تاريخ التسجيل مطلوب.',
+            'registration_date.date' => 'يجب أن يكون تاريخ التسجيل تاريخًا صحيحًا.',
+            'registration_start.required' => 'تاريخ بدء التسجيل مطلوب.',
+            'registration_start.date' => 'يجب أن يكون تاريخ بدء التسجيل تاريخًا صحيحًا.',
+            'registration_end.required' => 'تاريخ انتهاء التسجيل مطلوب.',
+            'registration_end.date' => 'يجب أن يكون تاريخ انتهاء التسجيل تاريخًا صحيحًا.',
+            'registration_end.after' => 'يجب أن يكون تاريخ انتهاء التسجيل بعد تاريخ بدء التسجيل.',
+            'request_status.required' => 'حالة الطلب مطلوبة.',
+            'request_status.string' => 'يجب أن تكون حالة الطلب نصاً.',
+            'request_status.max' => 'لا يمكن أن تتجاوز حالة الطلب 255 حرفًا.',
+            'registration_duration.required' => 'مدة التسجيل مطلوبة.',
+            'registration_duration.integer' => 'يجب أن تكون مدة التسجيل عددًا صحيحًا.',
+            'coupon_number.required' => 'رقم القسيمة مطلوب.',
+            'coupon_number.string' => 'يجب أن يكون رقم القسيمة نصاً.',
+            'coupon_number.max' => 'لا يمكن أن يتجاوز رقم القسيمة 255 حرفًا.',
+            'coupon_number.unique' => 'تم استخدام رقم القسيمة من قبل. يرجى إدخال رقم فريد.',
+
         ];
             
     }

@@ -59,13 +59,17 @@
                                                     @enderror
                                                 </div>
                                             </div>
-
-                                            <!-- Second row of inputs -->
+                                            
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label for="government" class="form-label">{{ __('models.government') }}</label>
-                                                    <input type="text" id="government" name="government" class="form-control" value="{{ old('government') }}">
-                                                    @error('government')
+                                                    <label for="governorate" class="form-label">{{ __('models.governorate') }}</label>
+                                                    <select id="governorate" name="governorate" class="form-control">
+                                                        <option value="">{{ __('models.select_governorate') }}</option>
+                                                         @foreach($governorates as $governorate)
+                                                         <option value="{{ $governorate->name }}" {{ old('governorate') == $governorate->name ? 'selected' : '' }}>{{ $governorate->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('governorate')
                                                         <span class="alert alert-danger">
                                                             <small class="errorTxt">{{ $message }}</small>
                                                         </span>
@@ -163,16 +167,19 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Sixth row of inputs -->
                                             <div class="col-6">
-                                                <div class="form-group">
+                                               <div class="form-group">
                                                     <label for="discount_type" class="form-label">{{ __('models.discount_type') }}</label>
-                                                    <input type="text" id="discount_type" name="discount_type" class="form-control" value="{{ old('discount_type') }}">
-                                                    @error('discount_type')
-                                                        <span class="alert alert-danger">
-                                                            <small class="errorTxt">{{ $message }}</small>
-                                                        </span>
-                                                    @enderror
+                                                    <select id="discount_type" name="discount_type" class="form-control">
+                                                       <option value="" disabled selected>{{ __('Select Discount Type') }}</option>
+                                                       <option value="cash" {{ old('discount_type') == 'cash' ? 'selected' : '' }}>Cash</option>
+                                                       <option value="percent" {{ old('discount_type') == 'percent' ? 'selected' : '' }}>Percent</option>
+                                                    </select>
+                                                   @error('discount_type')
+                                                   <span class="alert alert-danger">
+                                                    <small class="errorTxt">{{ $message }}</small>
+                                                   </span>
+                                                   @enderror
                                                 </div>
                                             </div>
 
@@ -213,7 +220,6 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Eighth row of inputs -->
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label for="date" class="form-label">{{ __('models.date') }}</label>
@@ -226,17 +232,27 @@
                                                 </div>
                                             </div>
 
+                                           
                                             <div class="col-6">
-                                                <div class="form-group">
-                                                    <label for="rate" class="form-label">{{ __('models.rate') }}</label>
-                                                    <input type="text" id="rate" name="rate" class="form-control" value="{{ old('rate') }}">
-                                                    @error('rate')
-                                                        <span class="alert alert-danger">
-                                                            <small class="errorTxt">{{ $message }}</small>
-                                                        </span>
-                                                    @enderror
+                                              <div class="form-group">
+                                                  <label for="rate" class="form-label">{{ __('models.rate') }}</label>
+                                                  <div class="star-rating">
+                                                    <input type="radio" id="star5" name="rate" value="5" {{ old('rate') == 5 ? 'checked' : '' }}><label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+                                                    <input type="radio" id="star4" name="rate" value="4" {{ old('rate') == 4 ? 'checked' : '' }}><label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+                                                    <input type="radio" id="star3" name="rate" value="3" {{ old('rate') == 3 ? 'checked' : '' }}><label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+                                                    <input type="radio" id="star2" name="rate" value="2" {{ old('rate') == 2 ? 'checked' : '' }}><label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+                                                    <input type="radio" id="star1" name="rate" value="1" {{ old('rate') == 1 ? 'checked' : '' }}><label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+                                                  </div>
+                                                 @error('rate')
+                                                 <span class="alert alert-danger">
+                                                   <small class="errorTxt">{{ $message }}</small>
+                                                 </span>
+                                                 @enderror
                                                 </div>
                                             </div>
+
+
+                                            
 
                                             <!-- Ninth row of inputs -->
                                             <div class="col-6">
@@ -251,18 +267,14 @@
                                                 </div>
                                             </div>
 
-                                            <!-- <div class="col-6">
-                                             <div class="form-group">
-                                               <label class="form-label" for="holded">{{ __('models.holded') }}</label>
-                                               <input type="hidden" name="holded" value="no">
-                                               <input type="checkbox" name="holded" value="yes" {{ old('holded', 'no') === 'yes' ? 'checked' : '' }} class="form-control">
-                                             </div>
-                                           </div>    -->
+                                        
+                                         
                                            <div class="col-6">
                                            <div class="form-group">
-                                                <label for="hold">{{ __('models.hold') }}</label>
+                                                
                                                 <input type="hidden" name="hold" value="0"> <!-- Default value when unchecked -->
                                                 <input type="checkbox" id="hold" class="form-check-input" name="hold" value="1" {{ old('hold') == '1' ? 'checked' : '' }} />
+                                                <label for="hold">{{ __('models.hold') }}</label>
                                                 @error('hold')
                                                 <span class="alert alert-danger">
                                                    <small class="errorTxt">{{ $message }}</small>
@@ -287,6 +299,31 @@
         </div>
     </div>
     <!-- END: Content-->
+    <style>
+    .star-rating {
+        direction: rtl;
+        display: inline-flex;
+        justify-content: flex-start;
+    }
+    .star-rating input[type="radio"] {
+        display: none;
+    }
+    .star-rating label {
+        font-size: 24px;
+        color: #ddd;
+        cursor: pointer;
+        margin: 0 5px;
+    }
+    .star-rating input[type="radio"]:checked ~ label,
+    .star-rating input[type="radio"]:hover ~ label {
+        color: #ffc107;
+    }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: #ffc107;
+    }
+</style>
+
 
     @push('js')
         <script src="{{ asset('dashboard/assets/js/custom/validation/organizationForm.js') }}"></script>
